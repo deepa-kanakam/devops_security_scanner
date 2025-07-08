@@ -74,20 +74,20 @@ def recommend_remediation(finding):
     return remediation_map.get(finding["id"], "Refer to vendor advisory or CVE for fix instructions.")
 
 def main():
-    print("🔍 Running Trivy scan...")
+    print(" Running Trivy scan...")
     trivy_data = run_trivy("nginx:latest")
 
-    print("🔍 Running Semgrep scan...")
+    print(" Running Semgrep scan...")
     semgrep_data = run_semgrep("src/")
 
-    print("📦 Aggregating results...")
+    print(" Aggregating results...")
     findings = aggregate_findings(trivy_data, semgrep_data)
 
-    print("⚖️ Prioritizing vulnerabilities...")
+    print(" Prioritizing vulnerabilities...")
     model = train_dummy_model()
     prioritized = prioritize(findings, model)
 
-    print("💡 Adding remediation guidance...")
+    print(" Adding remediation guidance...")
     for f in prioritized:
         f["remediation"] = recommend_remediation(f)
 
@@ -95,7 +95,7 @@ def main():
     with open("output/final_report.json", "w") as f:
         json.dump(prioritized, f, indent=2)
 
-    print("✅ Report generated at output/final_report.json")
+    print(" Report generated at output/final_report.json")
 
 if __name__ == "__main__":
     main()
